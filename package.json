@@ -1,0 +1,24 @@
+{
+  "name": "clarity-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Conversational AI planning assistant for adults with ADHD. Decomposes goals into a Goal -> Milestone -> Task -> Subtask hierarchy and syncs it to Notion.",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^0.3.0",
+    "@langchain/core": "^0.3.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "jsonwebtoken": "9.0.3",
+    "langchain": "^0.3.0",
+    "sanitize-html": "2.13.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "dev": "netlify dev",
+    "test": "jest"
+  }
+}

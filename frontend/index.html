@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClarityAI - Plan your goal</title>
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header>
+      <div class="header-inner">
+        <a class="logo" href="/" aria-label="ClarityAI home">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"
+              fill="#4A4D3C"
+            />
+          </svg>
+          <span>ClarityAI</span>
+        </a>
+        <div class="header-right">
+          <button type="button" class="pill" id="plan-new-goal-btn">Plan a new goal</button>
+          <div class="header-divider" aria-hidden="true"></div>
+          <div class="account-badge" id="account-btn" aria-label="Notion not connected">
+            <span class="avatar" id="avatar" aria-hidden="true">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </span>
+            <span id="account-label">Not connected</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <div
+        id="chat-log"
+        role="log"
+        aria-live="polite"
+        aria-label="Conversation with ClarityAI"
+      ></div>
+    </main>
+
+    <footer id="composer" class="hidden">
+      <div class="composer-inner">
+        <!-- Decorative only for now - PDF upload isn't implemented -->
+        <span class="attach-icon" aria-hidden="true">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"
+            />
+          </svg>
+        </span>
+        <div class="composer-input-wrap">
+          <label for="chat-input" class="visually-hidden">Your message</label>
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Describe what you want to achieve"
+            autocomplete="off"
+          />
+          <button type="button" id="mic-btn" aria-label="Speech to text" title="Speech to text">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
+          </button>
+        </div>
+        <button type="button" id="send-btn" aria-label="Send message" title="Send message">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="12" y1="19" x2="12" y2="5" />
+            <polyline points="5 12 12 5 19 12" />
+          </svg>
+        </button>
+      </div>
+      <p class="composer-hint">AI generated. Please review before syncing.</p>
+    </footer>
+
+    <!-- no build step: marked renders markdown, DOMPurify sanitizes it. -->
+    <script src="third-party/marked.min.js"></script>
+    <script src="third-party/purify.min.js"></script>
+
+    <script src="api.js"></script>
+    <script src="speech.js"></script>
+    <script src="plan.js"></script>
+    <script src="client.js"></script>
+  </body>
+</html>

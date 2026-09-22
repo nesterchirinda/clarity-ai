@@ -1,0 +1,34 @@
+[build]
+  publish = "frontend"
+  command = "npm install"
+
+[functions]
+  directory = "backend"
+  node_bundler = "esbuild"
+  external_node_modules = ["@supabase/supabase-js"]
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://s3-us-west-2.amazonaws.com https://secure.notion-static.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # microphone=(self) enables FR13 speech-to-text via the Web Speech API
+    Permissions-Policy = "camera=(), microphone=(self), geolocation=()"
+    X-Frame-Options = "DENY"
+
+# CORS headers for Netlify Functions
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+# Safety redirect: handle accidental missing dot in function path
+[[redirects]]
+  from = "/netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200

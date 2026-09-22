@@ -1,0 +1,701 @@
+:root {
+  --bg: #fafaf8;
+  --ink: #1a1a1a;
+  --ink-soft: #6b6b6b;
+  --ink-faint: #6e6e6e;
+  --accent: #4a4d3c;
+  --accent-dark: #3a3d2e;
+  --bubble-user: #e8ede4;
+  --border: #e8e3dc;
+  --card-bg: #ffffff;
+  --error-muted: #a8655b;
+  --font-serif: 'Crimson Pro', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+}
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 0 0 8px 0;
+  z-index: 100;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* Header */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+/* 3-column grid, middle column matches main's 700px width to stay aligned with the plan card. */
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(max-content, 1fr) minmax(0, 700px) minmax(max-content, 1fr);
+  align-items: center;
+  width: 100%;
+}
+.logo {
+  grid-column: 1;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.logo span {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.header-right {
+  grid-column: 3;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.header-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+.pill {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--ink);
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.pill:hover {
+  background: #f3f1ec;
+}
+.pill:disabled {
+  color: var(--ink-faint);
+  cursor: not-allowed;
+}
+.pill:disabled:hover {
+  background: #fff;
+}
+.pill-solid {
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  padding: 9px 18px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.pill-solid:hover {
+  background: var(--accent-dark);
+}
+.pill-solid:disabled {
+  background: var(--ink-faint);
+  cursor: not-allowed;
+}
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.account-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border-radius: 999px;
+  padding: 4px 10px 4px 4px;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #999;
+  color: #999;
+  overflow: hidden;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* A real photo gets a plain white frame instead of the fallback icon's olive badge. */
+.avatar.connected.has-photo {
+  background: #fff;
+  border-color: var(--border);
+}
+.avatar.connected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* Main / chat log */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 2rem;
+}
+
+/* Appended into the chat log itself (see showError() in client.js), not a fixed banner. */
+.chat-error {
+  color: var(--error-muted);
+  font-size: 0.9rem;
+}
+
+#chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.msg-row {
+  display: flex;
+}
+.msg-row.user {
+  justify-content: flex-end;
+}
+.msg-row.assistant {
+  justify-content: flex-start;
+}
+
+.msg-assistant {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 90%;
+  font-size: 0.95rem;
+}
+.msg-assistant .spark {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.msg-status {
+  color: var(--ink-faint);
+}
+/* Markdown from Claude's replies - reset block spacing so it reads like plain chat text. */
+.msg-assistant p,
+.task-description p,
+.subtask-description p {
+  margin: 0;
+}
+.msg-assistant p + p,
+.task-description p + p,
+.subtask-description p + p {
+  margin-top: 0.6rem;
+}
+.msg-assistant ul,
+.msg-assistant ol,
+.task-description ul,
+.task-description ol,
+.subtask-description ul,
+.subtask-description ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+.msg-assistant li + li {
+  margin-top: 0.2rem;
+}
+.msg-assistant code,
+.task-description code,
+.subtask-description code {
+  background: var(--bubble-user);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.88em;
+}
+.msg-assistant a {
+  color: var(--accent-dark);
+}
+/* The spark pulses on the last line in the log - the one waiting on the user. */
+.msg-row.assistant:last-child .spark {
+  animation: spark-pulse 1.6s ease-in-out infinite;
+}
+@keyframes spark-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.msg-user {
+  max-width: 75%;
+  background: var(--bubble-user);
+  color: var(--ink);
+  border-radius: 18px;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+}
+
+.inline-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 0.85rem;
+}
+.inline-actions .pill-solid,
+.inline-actions .pill {
+  align-self: flex-start;
+}
+
+/* Small text under an assistant message, e.g. an inline error under a retry button. */
+.step-hint {
+  display: block;
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+}
+.step-hint-error {
+  color: var(--error-muted);
+}
+
+/* Plan review card */
+.plan-card-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+/* No internal max-height/scroll - each page is one milestone's tasks, so the card grows naturally. */
+.plan-card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  padding: 1.75rem 1.75rem;
+}
+/* An eyebrow label, not a heading - small/uppercase keeps it secondary to the milestone title. */
+.goal-title {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 1.1rem;
+  line-height: 1.3;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* One milestone at a time (see renderMilestonePage() in plan.js); the pager tracks position. */
+.milestone-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.milestone-pager-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink-faint);
+}
+/* Bare icon buttons, no circle - just a color change on hover/interaction. */
+.pager-btn {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  padding: 4px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pager-btn:hover:not(:disabled) {
+  color: var(--accent);
+}
+.pager-btn:disabled {
+  color: var(--ink-faint);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Most prominent element on the page - large serif face carries that, not boldness. */
+.milestone-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 0 0 0.5rem;
+  line-height: 1.25;
+}
+.milestone-description {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  margin: 0 0 1.4rem;
+  line-height: 1.5;
+}
+.milestone-description a {
+  color: var(--accent-dark);
+}
+
+/* Tasks: short bounded list, collapsed by default. Sans face, unlike the goal/milestone serif framing. */
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.task-item {
+  border-bottom: 1px solid var(--border);
+}
+.task-item:last-child {
+  border-bottom: none;
+}
+.task-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0;
+  list-style: none;
+}
+/* A task with nothing to expand still keeps the chevron (greyed out) for row alignment. */
+.task-item > .task-summary {
+  cursor: default;
+}
+details > .task-summary {
+  cursor: pointer;
+}
+.task-summary-inert .task-chevron {
+  color: var(--border);
+}
+.task-summary::-webkit-details-marker {
+  display: none;
+}
+.task-summary::marker {
+  content: '';
+}
+/* Rotating arrow: right when collapsed, down when open. */
+.task-chevron {
+  flex-shrink: 0;
+  color: var(--ink-soft);
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+.task-item[open] .task-chevron {
+  transform: rotate(90deg);
+}
+details > .task-summary:hover .task-chevron {
+  color: var(--accent);
+}
+.task-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+/* Only shown when present. Markdown-rendered so a known official link becomes a real <a>. */
+.task-description {
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  line-height: 1.5;
+  margin: 0.35rem 0 0.85rem;
+}
+.task-description a {
+  color: var(--accent-dark);
+}
+
+/* Subtasks: numbered (1. 2. 3.) rather than bulleted, so the order reads as sequence. */
+.subtask-list {
+  list-style: decimal;
+  margin: 0;
+  padding: 0.1rem 0 0.65rem 3.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.subtask-row {
+  padding-left: 0.2rem;
+}
+.subtask-row::marker {
+  color: var(--accent);
+  font-size: 0.88rem;
+}
+.subtask-content {
+  display: flex;
+  flex-direction: column;
+}
+.subtask-label {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.subtask-description {
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  line-height: 1.45;
+  margin-top: 0.15rem;
+}
+.subtask-description a {
+  color: var(--accent-dark);
+}
+
+.plan-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.icon-btn:hover {
+  color: var(--accent);
+  background: #f3f1ec;
+}
+.icon-btn.active {
+  color: var(--accent);
+}
+
+/* Synced completion panel */
+.synced-panel {
+  text-align: center;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+.synced-panel p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+.synced-panel .actions {
+  display: flex;
+  gap: 0.7rem;
+}
+.synced-panel .actions a.pill-solid {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Notion reconnect / data source setup fallback */
+.setup-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+/* Composer (bottom input bar) */
+#composer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 1rem 1.5rem 1.25rem;
+}
+#composer.hidden {
+  display: none;
+}
+.composer-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.attach-icon {
+  flex-shrink: 0;
+  padding: 6px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.composer-input-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+#chat-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.75rem 2.6rem 0.75rem 1.1rem;
+  font: inherit;
+  font-size: 0.95rem;
+  border-radius: 999px;
+  outline: none;
+}
+#mic-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  padding: 6px;
+  border-radius: 999px;
+}
+#mic-btn:hover {
+  background: var(--bubble-user);
+}
+#mic-btn.listening {
+  color: #fff;
+  background: var(--accent);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+#send-btn {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#send-btn:hover {
+  background: var(--accent-dark);
+}
+#send-btn:disabled {
+  background: var(--ink-faint);
+  cursor: not-allowed;
+}
+.composer-hint {
+  max-width: 700px;
+  margin: 0.5rem auto 0;
+  text-align: center;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--ink-faint);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* Below this, the combined natural width of the logo and account group can
+   exceed the viewport itself (phones, not just "narrower than 700px"), and
+   main no longer needs pixel alignment with the card underneath it anyway
+   since it's edge-to-edge on mobile - so drop the alignment grid for a
+   plain flex row and free up the align-to-card gutter for content instead. */
+@media (max-width: 700px) {
+  header {
+    padding: 0.85rem 1rem;
+  }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .logo,
+  .header-right {
+    margin: 0;
+  }
+  .header-right {
+    gap: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pill {
+    padding: 7px 12px;
+    font-size: 0.78rem;
+  }
+  /* The avatar + aria-label already convey connection state; dropping the
+     text label is what buys back enough room for the pill and logo. */
+  #account-label {
+    display: none;
+  }
+  .account-badge {
+    padding: 4px;
+  }
+  #composer {
+    padding: 0.85rem 1rem 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .logo span {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .plan-card {
+    padding: 1.25rem 1.1rem;
+  }
+  main {
+    padding: 1.25rem 1rem 1.5rem;
+  }
+}
