@@ -22,6 +22,22 @@ class NotionAdapter {
     return this._request(`/data_sources/${dataSourceId}`);
   }
 
+  // Reads rows from a data source, following pagination up to maxPages (ADR12)
+  async queryDataSource(dataSourceId, body = {}, { maxPages = 3 } = {}) {
+    const results = [];
+    let cursor;
+    for (let page = 0; page < maxPages; page += 1) {
+      const data = await this._request(`/data_sources/${dataSourceId}/query`, {
+        method: 'POST',
+        body: { page_size: 100, ...body, ...(cursor ? { start_cursor: cursor } : {}) }
+      });
+      results.push(...(data.results || []));
+      if (!data.has_more || !data.next_cursor) break;
+      cursor = data.next_cursor;
+    }
+    return results;
+  }
+
   async _request(path, options = {}) {
     const response = await fetch(`${notionBaseUrl}${path}`, {
       method: options.method || 'GET',
