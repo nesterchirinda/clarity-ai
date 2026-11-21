@@ -153,42 +153,6 @@ class DatabaseRepository {
     return data;
   }
 
-  // rethink_sessions - the rethink pipeline's transcript and versioned draft (ADR12)
-  async findRethinkSession(sessionId) {
-    const supabase = this._getClient();
-    const { data, error } = await supabase
-      .from('rethink_sessions')
-      .select('*')
-      .eq('session_id', sessionId)
-      .maybeSingle();
-    if (error)
-      throw new Error(`[DatabaseRepository] findRethinkSession failed: ${error.message}`);
-    return data;
-  }
-
-  async saveRethinkSession(userId, sessionId, session) {
-    const supabase = this._getClient();
-    const { data, error } = await supabase
-      .from('rethink_sessions')
-      .upsert(
-        {
-          user_id: userId,
-          session_id: sessionId,
-          intention_id: session.intentionId,
-          stage: session.stage,
-          transcript: session.transcript,
-          draft: session.draft,
-          updated_at: new Date().toISOString()
-        },
-        { onConflict: 'session_id' }
-      )
-      .select()
-      .single();
-    if (error)
-      throw new Error(`[DatabaseRepository] saveRethinkSession failed: ${error.message}`);
-    return data;
-  }
-
   async updateConversationHistory(sessionId, conversationHistory) {
     const supabase = this._getClient();
     const { data, error } = await supabase

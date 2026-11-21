@@ -17,8 +17,6 @@ a decided direction, not yet built.
 | [ADR09](09-session-verification.md) | Session Verification | Accepted |
 | [ADR10](10-llm-provider.md) | LLM Provider | Accepted |
 | [ADR11](11-rate-limiting.md) | Rate Limiting | Proposed |
-| [ADR12](12-ai-planning-pipeline.md) | AI Planning Pipeline | Proposed |
-| [ADR13](13-anthropic-sdk-adapter.md) | Anthropic SDK Adapter for the LLM Provider | Proposed |
 
 ## Status legend
 

@@ -46,19 +46,3 @@ CREATE TABLE IF NOT EXISTS conversation_sessions (
 CREATE INDEX IF NOT EXISTS idx_conversation_sessions_user_id ON conversation_sessions(user_id);
 
 
-
--- Rethink pipeline sessions (ADR12): transcript plus the versioned plan draft.
--- The draft is the source of truth for the plan; Claude edits it, never rewrites it.
-CREATE TABLE IF NOT EXISTS rethink_sessions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  session_id VARCHAR NOT NULL UNIQUE,
-  intention_id VARCHAR NOT NULL,
-  stage VARCHAR NOT NULL DEFAULT 'interview',
-  transcript JSONB NOT NULL DEFAULT '[]'::jsonb,
-  draft JSONB NOT NULL DEFAULT '{}'::jsonb,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
-);
-
-CREATE INDEX IF NOT EXISTS idx_rethink_sessions_user_id ON rethink_sessions(user_id);
