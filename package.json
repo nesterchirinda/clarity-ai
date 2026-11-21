@@ -21,7 +21,6 @@
   "scripts": {
     "dev": "netlify dev",
     "test": "jest",
-    "eval": "node backend/evals/run-evals.js",
-    "local": "node backend/evals/local-server.js"
+    "eval": "node backend/evals/run-evals.js"
   }
 }

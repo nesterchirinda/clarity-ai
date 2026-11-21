@@ -1,7 +1,6 @@
 // Rethink the sub-goals and tasks under one intention, through conversation (ADR12)
 //
 // POST { action, sessionId, ... }
-//   intentions {}             - the user's intentions from Notion (no sessionId needed)
 //   start   { intentionId }   - opens the conversation with a fixed first question
 //   message { text }          - an answer, a change to the sub-goals, or a refine,
 //                               depending on the stage the session is in
@@ -59,7 +58,7 @@ function createHandler(deps = {}) {
 
       const body = JSON.parse(event.body || '{}');
       const { action, sessionId } = body;
-      if (!['intentions', 'start', 'message', 'approve', 'back'].includes(action) || (action !== 'intentions' && !sessionId)) {
+      if (!sessionId || !['start', 'message', 'approve', 'back'].includes(action)) {
         return jsonResponse(400, { error: 'sessionId and a valid action are required' });
       }
 
@@ -73,9 +72,6 @@ function createHandler(deps = {}) {
 
       const today = now();
       const reader = makeReader(connection, refs);
-      if (action === 'intentions') {
-        return jsonResponse(200, { intentions: await reader.listIntentions() });
-      }
       const service = makeService();
 
       let session = await repository.findRethinkSession(sessionId);
