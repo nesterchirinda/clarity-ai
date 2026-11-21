@@ -81,9 +81,18 @@ Key parts, all in `backend/application/rethink/`:
 * Bad, because code checks are heuristics (for example, verb detection) and can
   occasionally flag good wording; they repair once and then warn rather than block.
 
+### Frontend
+
+`frontend/clarity.html` and `frontend/clarity.js` (generated from the ClarityWorks
+prototype) call `/.netlify/functions/rethink` when it is reachable on the same site:
+`intentions` on load, then `start`, `message`, `approve` and `back`. The session cookie is
+`SameSite=Lax`, so the page must be served from the same site as the functions. Where
+the endpoint isn't reachable, the page falls back to its built-in plans.
+`npm run local` serves the page with the real endpoint, the real pipeline and the site's
+CSP, using in-memory stand-ins for Notion, Supabase and (unless `USE_CLAUDE=1`) Claude.
+
 ### Not yet built
 
-* Wiring the frontend to `/.netlify/functions/rethink`.
 * Writing the agreed plan to Notion (task per repeat date, linked to its sub-goal),
   reusing `NotionAdapter` with a plan-item-to-page mapping so re-syncs don't duplicate.
 * Reading task templates from Notion (currently passed in as an empty list).

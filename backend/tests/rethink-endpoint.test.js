@@ -55,7 +55,7 @@ function setup(serviceOverrides = {}) {
     refine: jest.fn(async () => ({ message: 'Changed.', warnings: [{ message: 'A warning' }] })),
     ...serviceOverrides
   };
-  const handler = createHandler({ makeRepository: () => repository, makeReader: () => ({ loadForIntention: async () => planner }), makeService: () => service, now });
+  const handler = createHandler({ makeRepository: () => repository, makeReader: () => ({ loadForIntention: async () => planner, listIntentions: async () => planner.intentions }), makeService: () => service, now });
   const send = async (body) => { const response = await handler(makeEvent(body)); return { status: response.statusCode, body: JSON.parse(response.body) }; };
   return { repository, service, handler, send };
 }
@@ -67,6 +67,15 @@ test('should return 401 without a session cookie', async () => {
   const response = await handler(makeEvent({ action: 'start', sessionId: 's1', intentionId: 'i1' }, { authenticated: false }));
 
   expect(response.statusCode).toBe(401);
+});
+
+test('should list intentions without a session id', async () => {
+  const { send } = setup();
+
+  const listed = await send({ action: 'intentions' });
+
+  expect(listed.status).toBe(200);
+  expect(listed.body.intentions).toEqual(planner.intentions);
 });
 
 test('should return 400 for an unknown action', async () => {
